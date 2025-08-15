@@ -6,22 +6,35 @@ export default class PixiShaderSmoke {
   width = 640;
   height = 960;
   smokeHeight = '3.0';
+  c5 = '1.0';
+  c6 = '1.2';
+  noise = '5.0';
   onload?: () => void;
 
   constructor({
     container,
     height,
     onload,
+    c5,
+    c6,
+    noise,
   }: {
     container: HTMLElement;
     height: string;
     onload?: () => void;
+    c5?: string;
+    c6?: string;
+    noise?: string;
   }) {
     this.container = container;
     this.width = this.container?.clientWidth || this.width;
     this.height = this.container?.clientHeight || this.height;
     this.smokeHeight = height || this.smokeHeight;
     this.onload = onload;
+
+    this.c5 = c5 || this.c5;
+    this.c6 = c6 || this.c6;
+    this.noise = noise || this.noise;
 
     this.init();
   }
@@ -63,6 +76,34 @@ export default class PixiShaderSmoke {
       },
     };
 
+    var uniforms2: { [key: string]: { type: string; value: any } } = {};
+    uniforms2.resolution = {
+      type: '2f',
+      value: {
+        x: this.width,
+        y: this.height,
+      },
+    };
+    uniforms2.alpha = {
+      type: '1f',
+      value: 1.0,
+    };
+    uniforms2.shift = {
+      type: '1f',
+      value: 1.6,
+    };
+    uniforms2.time = {
+      type: '1f',
+      value: 0,
+    };
+    uniforms2.speed = {
+      type: '2f',
+      value: {
+        x: -0.7,
+        y: -0.4,
+      },
+    };
+
     var fragmentSrc = [
       'precision mediump float;',
       'uniform vec2      resolution;',
@@ -97,10 +138,10 @@ export default class PixiShaderSmoke {
       'const vec3 c2 = vec3(255.0/255.0, 255.0/255.0, 255.0/255.0);',
       'const vec3 c3 = vec3(0.0, 0.0, 0.0);',
       'const vec3 c4 = vec3(255.0/255.0, 255.0/255.0, 255.0/255.0);',
-      'const vec3 c5 = vec3(0.6);',
-      'const vec3 c6 = vec3(0.9);',
+      `const vec3 c5 = vec3(${this.c5});`,
+      `const vec3 c6 = vec3(${this.c6});`,
 
-      'vec2 p = gl_FragCoord.xy * 10.0 / resolution.xx;',
+      `vec2 p = gl_FragCoord.xy * ${this.noise} / resolution.xx;`,
       'float q = fbm(p - time * 0.1);',
       'vec2 r = vec2(fbm(p + q + time * speed.x - p.x - p.y), fbm(p + q - time * speed.y));',
       'vec3 c = mix(c1, c2, fbm(p + r)) + mix(c3, c4, r.x) - mix(c5, c6, r.y);',
