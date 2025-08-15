@@ -10,6 +10,7 @@ export default class PixiShaderSmoke {
   c6 = '1.2';
   noise = '5.0';
   onload?: () => void;
+  shaderImage: string = 'https://s3-us-west-2.amazonaws.com/s.cdpn.io/167451/test_BG.jpg';
 
   constructor({
     container,
@@ -18,6 +19,7 @@ export default class PixiShaderSmoke {
     c5,
     c6,
     noise,
+    shaderImage,
   }: {
     container: HTMLElement;
     height: string;
@@ -25,6 +27,7 @@ export default class PixiShaderSmoke {
     c5?: string;
     c6?: string;
     noise?: string;
+    shaderImage?: string;
   }) {
     this.container = container;
     this.width = this.container?.clientWidth || this.width;
@@ -35,6 +38,7 @@ export default class PixiShaderSmoke {
     this.c5 = c5 || this.c5;
     this.c6 = c6 || this.c6;
     this.noise = noise || this.noise;
+    this.shaderImage = shaderImage || this.shaderImage;
 
     this.init();
   }
@@ -158,9 +162,9 @@ export default class PixiShaderSmoke {
 
     var coolFilter = new PIXI.AbstractFilter(fragmentSrc, uniforms);
 
-    var bg = PIXI.Sprite.fromImage(
-      'https://s3-us-west-2.amazonaws.com/s.cdpn.io/167451/test_BG.jpg',
-    );
+    console.log(this.shaderImage);
+
+    var bg = PIXI.Sprite.fromImage(this.shaderImage);
     bg.width = this.width;
     bg.height = this.height;
     bg.shader = coolFilter;

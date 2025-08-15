@@ -7,13 +7,15 @@ export default class PixiShaderSmoke {
     c6: string;
     noise: string;
     onload?: () => void;
-    constructor({ container, height, onload, c5, c6, noise, }: {
+    shaderImage: string;
+    constructor({ container, height, onload, c5, c6, noise, shaderImage, }: {
         container: HTMLElement;
         height: string;
         onload?: () => void;
         c5?: string;
         c6?: string;
         noise?: string;
+        shaderImage?: string;
     });
     init(): void;
 }
