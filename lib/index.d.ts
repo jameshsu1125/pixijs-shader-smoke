@@ -1,3 +1,4 @@
+import * as PIXI from 'pixi.js';
 export default class PixiShaderSmoke {
     container: HTMLElement;
     width: number;
@@ -8,6 +9,14 @@ export default class PixiShaderSmoke {
     noise: string;
     onload?: () => void;
     shaderImage: string;
+    renderer: PIXI.Renderer | null;
+    uniforms: {
+        [key: string]: {
+            type: string;
+            value: any;
+        };
+    };
+    bg: PIXI.Sprite | null;
     constructor({ container, height, onload, c5, c6, noise, shaderImage, }: {
         container: HTMLElement;
         height: string;
@@ -18,4 +27,5 @@ export default class PixiShaderSmoke {
         shaderImage?: string;
     });
     init(): void;
+    resizeTo(width: number, height: number): void;
 }
