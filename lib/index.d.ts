@@ -17,7 +17,8 @@ export default class PixiShaderSmoke {
         };
     };
     bg: PIXI.Sprite | null;
-    constructor({ container, height, onload, c5, c6, noise, shaderImage, }: {
+    fps: number;
+    constructor({ container, height, onload, c5, c6, noise, shaderImage, fps, }: {
         container: HTMLElement;
         height: string;
         onload?: () => void;
@@ -25,6 +26,7 @@ export default class PixiShaderSmoke {
         c6?: string;
         noise?: string;
         shaderImage?: string;
+        fps?: number;
     });
     init(): void;
     resizeTo(width: number, height: number): void;

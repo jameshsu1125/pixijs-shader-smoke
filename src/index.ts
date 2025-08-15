@@ -1,3 +1,4 @@
+import EnterFrame from 'lesca-enterframe';
 // @ts-ignore
 import * as PIXI from 'pixi.js';
 
@@ -14,6 +15,7 @@ export default class PixiShaderSmoke {
   renderer: PIXI.Renderer | null = null;
   uniforms: { [key: string]: { type: string; value: any } } = {};
   bg: PIXI.Sprite | null = null;
+  fps: number = 30;
 
   constructor({
     container,
@@ -23,6 +25,7 @@ export default class PixiShaderSmoke {
     c6,
     noise,
     shaderImage,
+    fps,
   }: {
     container: HTMLElement;
     height: string;
@@ -31,6 +34,7 @@ export default class PixiShaderSmoke {
     c6?: string;
     noise?: string;
     shaderImage?: string;
+    fps?: number;
   }) {
     this.container = container;
     this.width = this.container?.clientWidth || this.width;
@@ -42,6 +46,7 @@ export default class PixiShaderSmoke {
     this.c6 = c6 || this.c6;
     this.noise = noise || this.noise;
     this.shaderImage = shaderImage || this.shaderImage;
+    this.fps = fps || this.fps;
 
     this.init();
   }
@@ -148,19 +153,15 @@ export default class PixiShaderSmoke {
     });
 
     let count = 0;
-
-    const animate = () => {
+    EnterFrame.setFPS(this.fps);
+    EnterFrame.add(() => {
       count += 0.01;
-
       coolFilter.uniforms.time.value = count;
       coolFilter.syncUniforms();
 
       this.renderer.render(stage);
-
-      requestAnimationFrame(animate);
-    };
-
-    requestAnimationFrame(animate);
+    });
+    EnterFrame.play();
   }
 
   resizeTo(width: number, height: number) {
