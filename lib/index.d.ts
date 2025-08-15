@@ -3,9 +3,11 @@ export default class PixiShaderSmoke {
     width: number;
     height: number;
     smokeHeight: string;
-    constructor({ container, height }: {
+    onload?: () => void;
+    constructor({ container, height, onload, }: {
         container: HTMLElement;
         height: string;
+        onload?: () => void;
     });
     init(): void;
 }

@@ -1,4 +1,4 @@
-import YourClass from '.';
+import PixiShaderSmoke from '.';
 
 const createApp = () => {
   return new Promise<HTMLElement[]>((resolve) => {
@@ -15,7 +15,7 @@ const createApp = () => {
     const container = document.createElement('div');
     container.className = 'smoke';
 
-    new YourClass({ container, height: '5.0' });
+    new PixiShaderSmoke({ container, height: '5.0' });
 
     resolve([canvasWithImage, container]);
   });

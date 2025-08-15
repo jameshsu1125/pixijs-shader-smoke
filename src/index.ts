@@ -6,12 +6,22 @@ export default class PixiShaderSmoke {
   width = 640;
   height = 960;
   smokeHeight = '3.0';
+  onload?: () => void;
 
-  constructor({ container, height }: { container: HTMLElement; height: string }) {
+  constructor({
+    container,
+    height,
+    onload,
+  }: {
+    container: HTMLElement;
+    height: string;
+    onload?: () => void;
+  }) {
     this.container = container;
     this.width = this.container?.clientWidth || this.width;
     this.height = this.container?.clientHeight || this.height;
     this.smokeHeight = height || this.smokeHeight;
+    this.onload = onload;
 
     this.init();
   }
@@ -114,6 +124,10 @@ export default class PixiShaderSmoke {
     bg.height = this.height;
     bg.shader = coolFilter;
     stage.addChild(bg);
+
+    bg.texture.baseTexture.on('loaded', () => {
+      this.onload?.();
+    });
 
     var count = 0;
 
