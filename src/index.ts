@@ -11,6 +11,9 @@ export default class PixiShaderSmoke {
   noise = '5.0';
   onload?: () => void;
   shaderImage: string = 'https://s3-us-west-2.amazonaws.com/s.cdpn.io/167451/test_BG.jpg';
+  renderer: PIXI.Renderer | null = null;
+  uniforms: { [key: string]: { type: string; value: any } } = {};
+  bg: PIXI.Sprite | null = null;
 
   constructor({
     container,
@@ -46,65 +49,37 @@ export default class PixiShaderSmoke {
   init() {
     var stage = new PIXI.Stage(true);
 
-    var renderer = PIXI.autoDetectRenderer(this.width, this.height, {
+    this.renderer = PIXI.autoDetectRenderer(this.width, this.height, {
       transparent: false,
     });
 
-    this.container.appendChild(renderer.view);
+    this.container.appendChild(this.renderer.view);
 
-    var uniforms: { [key: string]: { type: string; value: any } } = {};
-    uniforms.resolution = {
+    // this.uniforms: { [key: string]: { type: string; value: any } } = {};
+    this.uniforms.resolution = {
       type: '2f',
       value: {
         x: this.width,
         y: this.height,
       },
     };
-    uniforms.alpha = {
+    this.uniforms.alpha = {
       type: '1f',
       value: 1.0,
     };
-    uniforms.shift = {
+    this.uniforms.shift = {
       type: '1f',
       value: 1.6,
     };
-    uniforms.time = {
+    this.uniforms.time = {
       type: '1f',
       value: 0,
     };
-    uniforms.speed = {
+    this.uniforms.speed = {
       type: '2f',
       value: {
         x: 0.7,
         y: 0.4,
-      },
-    };
-
-    var uniforms2: { [key: string]: { type: string; value: any } } = {};
-    uniforms2.resolution = {
-      type: '2f',
-      value: {
-        x: this.width,
-        y: this.height,
-      },
-    };
-    uniforms2.alpha = {
-      type: '1f',
-      value: 1.0,
-    };
-    uniforms2.shift = {
-      type: '1f',
-      value: 1.6,
-    };
-    uniforms2.time = {
-      type: '1f',
-      value: 0,
-    };
-    uniforms2.speed = {
-      type: '2f',
-      value: {
-        x: -0.7,
-        y: -0.4,
       },
     };
 
@@ -160,21 +135,19 @@ export default class PixiShaderSmoke {
       '}',
     ];
 
-    var coolFilter = new PIXI.AbstractFilter(fragmentSrc, uniforms);
+    const coolFilter = new PIXI.AbstractFilter(fragmentSrc, this.uniforms);
 
-    console.log(this.shaderImage);
+    this.bg = PIXI.Sprite.fromImage(this.shaderImage);
+    this.bg.width = this.width;
+    this.bg.height = this.height;
+    this.bg.shader = coolFilter;
+    stage.addChild(this.bg);
 
-    var bg = PIXI.Sprite.fromImage(this.shaderImage);
-    bg.width = this.width;
-    bg.height = this.height;
-    bg.shader = coolFilter;
-    stage.addChild(bg);
-
-    bg.texture.baseTexture.on('loaded', () => {
+    this.bg.texture.baseTexture.on('loaded', () => {
       this.onload?.();
     });
 
-    var count = 0;
+    let count = 0;
 
     const animate = () => {
       count += 0.01;
@@ -182,11 +155,26 @@ export default class PixiShaderSmoke {
       coolFilter.uniforms.time.value = count;
       coolFilter.syncUniforms();
 
-      renderer.render(stage);
+      this.renderer.render(stage);
 
       requestAnimationFrame(animate);
     };
 
     requestAnimationFrame(animate);
+  }
+
+  resizeTo(width: number, height: number) {
+    this.width = width;
+    this.height = height;
+
+    if (this.renderer) {
+      this.renderer.resize(width, height);
+      this.uniforms.resolution.value = {
+        x: width,
+        y: height,
+      };
+      this.bg.width = width;
+      this.bg.height = height;
+    }
   }
 }

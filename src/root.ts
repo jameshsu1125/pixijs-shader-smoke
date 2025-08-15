@@ -1,6 +1,8 @@
 import PixiShaderSmoke from '.';
 import shaderImage from './smoke-shader.jpg';
 
+let smoke: PixiShaderSmoke;
+
 const createApp = () => {
   return new Promise<HTMLElement[]>((resolve) => {
     const canvasWithImage = document.createElement('canvas');
@@ -16,7 +18,11 @@ const createApp = () => {
     const container = document.createElement('div');
     container.className = 'smoke';
 
-    new PixiShaderSmoke({ container, height: '5.0', shaderImage });
+    smoke = new PixiShaderSmoke({ container, height: '5.0', shaderImage });
+
+    window.addEventListener('resize', () => {
+      smoke.resizeTo(window.innerWidth, window.innerHeight);
+    });
 
     resolve([canvasWithImage, container]);
   });
