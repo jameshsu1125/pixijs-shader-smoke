@@ -30,4 +30,5 @@ export default class PixiShaderSmoke {
     });
     init(): void;
     resizeTo(width: number, height: number): void;
+    destroy(): void;
 }

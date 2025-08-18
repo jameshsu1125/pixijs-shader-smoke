@@ -24,6 +24,12 @@ const createApp = () => {
       smoke.resizeTo(window.innerWidth, window.innerHeight);
     });
 
+    setTimeout(() => {
+      console.log('1213');
+
+      smoke?.destroy();
+    }, 10000);
+
     resolve([canvasWithImage, container]);
   });
 };

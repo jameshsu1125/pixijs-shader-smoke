@@ -178,4 +178,9 @@ export default class PixiShaderSmoke {
       this.bg.height = height;
     }
   }
+
+  destroy() {
+    EnterFrame.stop();
+    this.renderer.destroy();
+  }
 }
