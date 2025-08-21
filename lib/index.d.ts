@@ -1,4 +1,5 @@
 import * as PIXI from 'pixi.js';
+import * as smokeMachine from './smoke.js';
 export default class PixiShaderSmoke {
     container: HTMLElement;
     width: number;
@@ -32,3 +33,4 @@ export default class PixiShaderSmoke {
     resizeTo(width: number, height: number): void;
     destroy(): void;
 }
+export { smokeMachine };

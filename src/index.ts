@@ -1,6 +1,8 @@
 import EnterFrame from 'lesca-enterframe';
 // @ts-ignore
 import * as PIXI from 'pixi.js';
+// @ts-ignore
+import smokeMachine from './smoke.js';
 
 export default class PixiShaderSmoke {
   container;
@@ -184,3 +186,5 @@ export default class PixiShaderSmoke {
     this.renderer.destroy();
   }
 }
+
+export { smokeMachine };

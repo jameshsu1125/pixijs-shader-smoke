@@ -1,7 +1,5 @@
-import PixiShaderSmoke from '.';
-import shaderImage from './smoke-shader.jpg';
-
-let smoke: PixiShaderSmoke;
+// @ts-ignore
+import { smokeMachine } from './smoke';
 
 const createApp = () => {
   return new Promise<HTMLElement[]>((resolve) => {
@@ -15,22 +13,24 @@ const createApp = () => {
       ctx?.drawImage(img, 0, 0, 640, 960);
     };
 
-    const container = document.createElement('div');
-    container.className = 'smoke';
+    var party = smokeMachine(ctx, [54, 16.8, 18.2], 0.5);
+    party.start(); // start animating
 
-    smoke = new PixiShaderSmoke({ container, height: '5.0', shaderImage });
+    onmousemove = function (e) {
+      var x = e.clientX;
+      var y = e.clientY;
+      var n = 0.5;
+      var t = 500;
+      party.addsmoke(x, y, n, t);
+    };
 
-    window.addEventListener('resize', () => {
-      smoke.resizeTo(window.innerWidth, window.innerHeight);
-    });
+    setInterval(function () {
+      party.addsmoke(canvasWithImage.width / 2, canvasWithImage.height, 1, 1000, 0.1);
+    }, 50);
 
-    setTimeout(() => {
-      console.log('1213');
+    //
 
-      smoke?.destroy();
-    }, 10000);
-
-    resolve([canvasWithImage, container]);
+    resolve([canvasWithImage]);
   });
 };
 
